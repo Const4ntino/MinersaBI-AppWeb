@@ -7,6 +7,7 @@ import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/aut
 import { auth } from "./firebase";
 import { useNavigate } from "react-router"
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { ResetPasswordDialog } from "../../components/ResetPasswordDialog";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -40,46 +41,6 @@ export default function Login() {
   const isValidEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
-
-  const handleRecoverPassword = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-
-    if (!isValidEmail(email)) {
-      toast.error('Ingresa correctamente el email', {
-        position: "top-center",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
-      return;
-    }
-
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
-        console.log('Se envió el correo');
-        toast.success('Revise la bandeja de entrada de su correo electrónico', {
-          position: "top-center",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, " ", errorMessage);
-      });
-  }
 
   return (
 
@@ -140,13 +101,10 @@ export default function Login() {
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Contraseña</Label>
-                <a
-                  href="#"
-                  onClick={handleRecoverPassword}
-                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors dark:text-gray-400 dark:hover:text-white"
-                >
-                  ¿Olvidaste tu contraseña?
-                </a>
+                <ResetPasswordDialog 
+                  email={email}
+                  onEmailChange={setEmail}
+                />
               </div>
               <Input
                 id="password"
