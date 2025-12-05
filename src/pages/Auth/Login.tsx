@@ -20,7 +20,6 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in Successfully");
-
       navigate("/bi");
     } catch (error) {
       console.log(error);
@@ -41,7 +40,6 @@ export default function Login() {
   const isValidEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
-
 
   const handleRecoverPassword = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -81,26 +79,38 @@ export default function Login() {
         const errorMessage = error.message;
         console.log(errorCode, " ", errorMessage);
       });
-
-
   }
 
   return (
 
     <>
-      {/* Encabezado de la Aplicación */}
-      <picture>
+
+      {/*       <picture>
         <img src="imagen-fondo.webp" alt="imagen del interior de la tienda" className="w-full absolute top-0 left-0 max-h-screen object-cover object-center -z-10" />
-        {/* <img src="imagen-fondo.jpeg" alt="imagen del interior de la tienda"/> */}
-      </picture>
+      </picture> */}
+      <div className="w-full absolute top-0 left-0 max-h-screen h-screen -z-20">
+
+        {/* Imagen de Fondo */}
+        <img
+          src="imagen-fondo.webp"
+          alt="imagen del interior de la tienda"
+          className="w-full h-full object-cover object-center"
+        />
+
+        {/* Capa de Color Negro Translucido */}
+        {/* bg-black/50 significa color negro con 50% de opacidad */}
+        <div className="absolute inset-0 bg-black/50"></div>
+      </div>
+
+      {/* <img src="imagen-fondo.jpeg" alt="imagen del interior de la tienda"/> */}
 
       <picture>
         <img src="minersa.jpeg" alt="logo de Minersa" className="w-md select-none z-10" />
       </picture>
 
-      <div className="w-full h-[30vh] bg-blue-800 absolute bottom-0"></div>
+      {/* <div className="w-full h-[30vh] bg-blue-800 absolute bottom-0"></div> */}
 
-      <Card className="rounded-md shadow-sm px-2 w-full sm:w-md z-10">
+      <Card className="rounded-none md:rounded-md shadow-sm px-2 w-full sm:w-md z-10">
         <CardHeader className="space-y-1">
           <CardTitle className="text-3xl font-bold tracking-tight">
             Iniciar Sesión
