@@ -1,23 +1,8 @@
-import { Outlet, useNavigate } from "react-router"
-import { auth } from "@/pages/Auth/firebase"
-import { useEffect, useState } from "react"
-import type { User } from "firebase/auth";
+import { Outlet } from "react-router"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>();
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user != null) {
-        setUser(user);
-        navigate("bi");
-      } else {
-        setUser(null);
-      }
-    })
-  })
 
   return (
 

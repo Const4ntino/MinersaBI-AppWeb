@@ -1,12 +1,12 @@
-import { useState, type MouseEvent } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase";
 import { useNavigate } from "react-router"
-import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { toast, Bounce } from 'react-toastify';
 import { ResetPasswordDialog } from "../../components/ResetPasswordDialog";
 
 export default function Login() {
@@ -19,11 +19,13 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setIsLoading(true)
       await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in Successfully");
       navigate("/bi");
     } catch (error) {
       console.log(error);
+      setIsLoading(false)
       toast.error('Credenciales incorrectas', {
         position: "top-center",
         autoClose: 2000,
@@ -36,10 +38,6 @@ export default function Login() {
         transition: Bounce,
       });
     }
-  };
-
-  const isValidEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   return (
