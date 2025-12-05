@@ -2,7 +2,8 @@ import { doc, getDoc } from "firebase/firestore"
 import { useEffect, useState } from "react";
 import { auth, db } from "../Auth/firebase"
 import { type UserDetail } from "@/types";
-import { Loader, LogOut, Settings } from "lucide-react"
+import { Loader, LogOut } from "lucide-react"
+import { UserSettingsDialog } from "@/components/UserSettingsDialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 
@@ -26,7 +27,7 @@ export default function Bi() {
         }
       } else {
         console.log("User is not logged in");
-        navigate("login")
+        navigate("/")
       }
     })
   }
@@ -35,7 +36,7 @@ export default function Bi() {
     try {
       await auth.signOut();
       console.log("User logged out successfully");
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -52,16 +53,22 @@ export default function Bi() {
         <div className="flex flex-col gap-2 h-screen w-full bg-gray-100">
 
           {/* Encabezado de la Aplicación (Altura Fija) */}
-          <div className="flex justify-between p-5 bg-blue-800 text-white items-center">
+          <div className="flex justify-between p-5 bg-black text-white items-center">
             <div className="">
               <p className="text-3xl font-bold">Bienvenido</p>
               <p className="text-2xl font-semibold">{userDetails.firstName} {userDetails.lastName}</p>
             </div>
             <div className="flex flex-col gap-2">
-              <Button variant={"outline"}>
-                <Settings />
-                Cuenta
-              </Button>
+              {userDetails && (
+                <UserSettingsDialog 
+                  userDetails={{
+                    firstName: userDetails.firstName,
+                    lastName: userDetails.lastName,
+                    email: auth.currentUser?.email || ''
+                  }} 
+                  onUpdate={fetchUserData} 
+                />
+              )}
               <Button variant={"destructive"} className="w-fit" onClick={handleLogout}>
                 Cerrar Sesión
                 <LogOut />

@@ -2,6 +2,8 @@ import { Outlet, useNavigate } from "react-router"
 import { auth } from "@/pages/Auth/firebase"
 import { useEffect, useState } from "react"
 import type { User } from "firebase/auth";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ function App() {
     <>
       <main className="flex flex-col gap-5 items-center justify-center min-h-screen dark:bg-gray-900 relative">
         <Outlet />
+        <ToastContainer />
       </main>
     </>
   )
