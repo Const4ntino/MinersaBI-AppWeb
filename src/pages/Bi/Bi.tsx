@@ -84,12 +84,12 @@ export default function Bi() {
             {/* Lista de Pestañas (Altura Fija) */}
             <TabsList className="w-full flex-wrap h-auto">
               <TabsTrigger value="ventas">Dashboard de Ventas</TabsTrigger>
-              <TabsTrigger value="ejecutivo">Dashboard Ejecutivo</TabsTrigger>
+              <TabsTrigger value="ejecutivo">Dashboard Ejecutivo / Inventario</TabsTrigger>
             </TabsList>
 
             {/* 3. Contenido de Pestañas: Debe usar 'flex-1' o 'h-full' para ocupar el espacio restante. 
            Uso 'h-full' para asegurar que el contenido se extienda. Además, lo declaro como flex. */}
-            <TabsContent value="ventas" className="flex-1 p-0 h-full">
+            <TabsContent value="ventas" className="flex-1 p-0 h-auto sm:h-full">
 
               {/* 4. El Iframe: Debe tener explícitamente 'h-full' y 'w-full' para llenar su contenedor padre. */}
               <iframe
