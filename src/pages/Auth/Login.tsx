@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase";
-import { redirect, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,91 +20,147 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in Successfully");
+
       navigate("/bi");
     } catch (error) {
       console.log(error);
+      toast.error('Credenciales incorrectas', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+
+  const handleRecoverPassword = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+
+    if (!isValidEmail(email)) {
+      toast.error('Ingresa correctamente el email', {
+        position: "top-center",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      return;
+    }
+
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        console.log('Se envió el correo');
+        toast.success('Revise la bandeja de entrada de su correo electrónico', {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, " ", errorMessage);
+      });
+
+
+  }
 
   return (
 
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4 font-sans">
+    <>
+      {/* Encabezado de la Aplicación */}
+      <picture>
+        <img src="imagen-fondo.webp" alt="imagen del interior de la tienda" className="w-full absolute top-0 left-0 max-h-screen object-cover object-center -z-10" />
+        {/* <img src="imagen-fondo.jpeg" alt="imagen del interior de la tienda"/> */}
+      </picture>
 
-      <div className="w-full max-w-md">
+      <picture>
+        <img src="minersa.jpeg" alt="logo de Minersa" className="w-md select-none z-10" />
+      </picture>
 
-        {/* Encabezado de la Aplicación */}
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-            MINERSA
-          </h1>
-          <p className="text-lg text-gray-500 dark:text-gray-400">
-            Inteligencia de Negocios
-          </p>
-        </div>
+      <div className="w-full h-[30vh] bg-blue-800 absolute bottom-0"></div>
 
-        {/* Tarjeta de Login (Card de shadcn/ui) */}
-        <Card className="rounded-xl shadow-sm px-2">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-3xl font-bold tracking-tight">
-              Iniciar Sesión
-            </CardTitle>
-            <CardDescription>
-              Ingresa tu correo electrónico y contraseña para acceder.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="grid gap-6">
+      <Card className="rounded-md shadow-sm px-2 w-full sm:w-md z-10">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-3xl font-bold tracking-tight">
+            Iniciar Sesión
+          </CardTitle>
+          <CardDescription>
+            Ingresa tu correo electrónico y contraseña para acceder.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="grid gap-6">
 
-              {/* Campo de Correo Electrónico */}
-              <div className="grid gap-2">
-                <Label htmlFor="email">Correo Electrónico</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@ejemplo.com"
-                  required
-                  disabled={isLoading}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-
-              {/* Campo de Contraseña y Olvidó Contraseña */}
-              <div className="grid gap-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Contraseña</Label>
-                  <a
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); console.log('Solicitud de recuperación de contraseña.'); }}
-                    className="text-sm font-medium text-gray-600 hover:text-black transition-colors dark:text-gray-400 dark:hover:text-white"
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  disabled={isLoading}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-
-              {/* Botón de Inicio de Sesión */}
-              <Button
-                type="submit"
+            {/* Campo de Correo Electrónico */}
+            <div className="grid gap-2">
+              <Label htmlFor="email">Correo Electrónico</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@ejemplo.com"
+                required
                 disabled={isLoading}
-                className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
-              >
-                {isLoading ? 'Cargando...' : 'Iniciar Sesión'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            {/* Campo de Contraseña y Olvidó Contraseña */}
+            <div className="grid gap-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Contraseña</Label>
+                <a
+                  href="#"
+                  onClick={handleRecoverPassword}
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors dark:text-gray-400 dark:hover:text-white"
+                >
+                  ¿Olvidaste tu contraseña?
+                </a>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                required
+                disabled={isLoading}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            {/* Botón de Inicio de Sesión */}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+            >
+              {isLoading ? 'Cargando...' : 'Iniciar Sesión'}
+            </Button>
+            <ToastContainer />
+          </form>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 
