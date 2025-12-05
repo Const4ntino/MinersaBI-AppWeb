@@ -45,7 +45,7 @@ export default function Bi() {
   useEffect(() => {
     fetchUserData();
   }, [])
-  
+
   return (
     <>
       {userDetails ? (
@@ -60,13 +60,13 @@ export default function Bi() {
             </div>
             <div className="flex flex-col gap-2">
               {userDetails && (
-                <UserSettingsDialog 
+                <UserSettingsDialog
                   userDetails={{
                     firstName: userDetails.firstName,
                     lastName: userDetails.lastName,
                     email: auth.currentUser?.email || ''
-                  }} 
-                  onUpdate={fetchUserData} 
+                  }}
+                  onUpdate={fetchUserData}
                 />
               )}
               <Button variant={"destructive"} className="w-fit" onClick={handleLogout}>
@@ -84,7 +84,6 @@ export default function Bi() {
             {/* Lista de Pestañas (Altura Fija) */}
             <TabsList className="w-full flex-wrap h-auto">
               <TabsTrigger value="ventas">Dashboard de Ventas</TabsTrigger>
-              <TabsTrigger value="compras">Dashboard de Compras</TabsTrigger>
               <TabsTrigger value="ejecutivo">Dashboard Ejecutivo</TabsTrigger>
             </TabsList>
 
@@ -95,19 +94,15 @@ export default function Bi() {
               {/* 4. El Iframe: Debe tener explícitamente 'h-full' y 'w-full' para llenar su contenedor padre. */}
               <iframe
                 title="Gestion de concimiento"
-                className="w-full h-full border-none" // Añadimos h-full y eliminamos md:aspect-video
+                className="w-full h-full border-none" //
                 src="https://app.powerbi.com/view?r=eyJrIjoiZDVjOWQ5ZmUtYmFkNC00NjljLTkxYjItNmUyMWMzMjFjY2I5IiwidCI6IjVhYmVjNDkyLWNiNjEtNGJmZC1iODljLTdkY2Y4OTQyNTY4NiIsImMiOjR9"
                 frameBorder="0"
                 allowFullScreen
               ></iframe>
             </TabsContent>
 
-            <TabsContent value="compras">
-              Dashboard de compras...
-            </TabsContent>
-
             <TabsContent value="ejecutivo">
-              Dashboard Ejecutivo...
+              <iframe title="EJECUTIVO" className="w-full h-full border-none" src="https://app.powerbi.com/view?r=eyJrIjoiYWEwOTJiY2UtNzA4YS00NGQxLTg2M2UtNGJjMDM2ODUxNTM5IiwidCI6IjVhYmVjNDkyLWNiNjEtNGJmZC1iODljLTdkY2Y4OTQyNTY4NiIsImMiOjR9" frameBorder="0" allowFullScreen></iframe>
             </TabsContent>
           </Tabs>
         </div>
